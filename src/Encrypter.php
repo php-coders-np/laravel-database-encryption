@@ -7,7 +7,7 @@ namespace ESolution\DBEncryption;
 
 class Encrypter
 {
-
+    protected static $method = 'aes-128-ecb';
     /**
      * @param string $value
      *
@@ -15,7 +15,7 @@ class Encrypter
      */
     public static function encrypt($value)
     {
-        return openssl_encrypt($value, config('laravelDatabaseEncryption.encrypt_method'), self::getKey(), 0, $iv = '');
+        return openssl_encrypt($value, self::$method, self::getKey(), 0, $iv = '');
     }
 
     /**
@@ -25,7 +25,7 @@ class Encrypter
      */
     public static function decrypt($value)
     {
-        return openssl_decrypt($value, config('laravelDatabaseEncryption.encrypt_method'), self::getKey(), 0, $iv = '');
+        return openssl_decrypt($value, self::$method, self::getKey(), 0, $iv = '');
     }
 
     /**

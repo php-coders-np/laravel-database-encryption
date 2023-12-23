@@ -28,7 +28,7 @@ class DBEncryptionServiceProvider extends ServiceProvider
         $this->bootValidators();
 
         if ($this->app->runningInConsole()) {
-
+            
             $this->publishes([
                 __DIR__.'/../Config/config.php' => config_path('laravelDatabaseEncryption.php'),
             ], 'config');
