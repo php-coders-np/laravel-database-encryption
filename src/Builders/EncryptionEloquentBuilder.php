@@ -5,7 +5,7 @@
  *
  */
 
-namespace ESolution\DBEncryption\Builders;
+namespace PHPCodersNp\DBEncryption\Builders;
 
 use Illuminate\Database\Eloquent\Builder;
 

@@ -3,14 +3,14 @@
  * src/Providers/EncryptServiceProvider.php.
  *
  */
-namespace ESolution\DBEncryption\Providers;
+namespace PHPCodersNp\DBEncryption\Providers;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
 
-use ESolution\DBEncryption\Console\Commands\EncryptModel;
-use ESolution\DBEncryption\Console\Commands\DecryptModel;
+use PHPCodersNp\DBEncryption\Console\Commands\EncryptModel;
+use PHPCodersNp\DBEncryption\Console\Commands\DecryptModel;
 
 class DBEncryptionServiceProvider extends ServiceProvider
 {
