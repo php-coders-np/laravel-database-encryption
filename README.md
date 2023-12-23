@@ -34,6 +34,7 @@ Via Composer command line:
 ```bash
 $ composer require phpcodersnp/laravel-database-encryption
 ```
+php artisan vendor:publish --provider="PHPCodersNp\DBEncryption\Providers\DBEncryptionServiceProvider"
 
 ### Step 2: Add ServiceProvider to your app/config.php file (Laravel 5.4 or below)
 
@@ -44,6 +45,11 @@ Add the service provider to the providers array in the config/app.php config fil
     ...
     \PHPCodersNp\DBEncryption\Providers\DBEncryptionServiceProvider::class,
 ],
+```
+
+### Step 3: Publish the config file using the following Artisan command:
+```bash
+php artisan vendor:publish --provider="PHPCodersNp\DBEncryption\Providers\DBEncryptionServiceProvider"
 ```
 
 ## Usage

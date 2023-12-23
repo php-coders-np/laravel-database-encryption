@@ -1,8 +1,8 @@
 <?php
 
-namespace ESolution\DBEncryption\Tests;
+namespace PHPCodersNp\DBEncryption\Tests;
 
-use ESolution\DBEncryption\Providers\DBEncryptionServiceProvider;
+use PHPCodersNp\DBEncryption\Providers\DBEncryptionServiceProvider;
 
 class TestCase extends \Orchestra\Testbench\TestCase
 {
