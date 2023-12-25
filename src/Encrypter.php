@@ -7,10 +7,11 @@ namespace PHPCodersNp\DBEncryption;
 
 class Encrypter
 {
-    protected static $method = 'aes-128-ecb';
+    private static $method = 'aes-128-ecb';
+
     /**
      * @param string $value
-     *
+     * 
      * @return string
      */
     public static function encrypt($value)
@@ -20,7 +21,7 @@ class Encrypter
 
     /**
      * @param string $value
-     *
+     * 
      * @return string
      */
     public static function decrypt($value)
@@ -35,7 +36,7 @@ class Encrypter
      */
     protected static function getKey()
     {
-        $salt = substr(hash('sha256', config('laravelDatabaseEncryption.encrypt_key')), 0, 16);
+        $salt = substr(hash('sha256', env('APP_KEY')), 0, 16);
         return $salt;
     }
 }
