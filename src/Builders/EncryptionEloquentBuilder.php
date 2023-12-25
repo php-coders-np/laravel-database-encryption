@@ -16,7 +16,7 @@ class EncryptionEloquentBuilder extends Builder
   {
     parent::__construct($query);
     // Set the salt for encryption
-    $this->salt = substr(hash('sha256', env('APP_KEY')), 0, 16);
+    $this->salt = substr(hash('sha256', config('laravelDatabaseEncryption.encrypt_key')), 0, 16);
   }
   public function whereEncrypted($param1, $param2, $param3 = null)
   {

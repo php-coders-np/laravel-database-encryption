@@ -28,6 +28,11 @@ class DBEncryptionServiceProvider extends ServiceProvider
         $this->bootValidators();
 
         if ($this->app->runningInConsole()) {
+
+            $this->publishes([
+                __DIR__.'/../Config/config.php' => config_path('laravelDatabaseEncryption.php'),
+            ], 'config');
+            
             $this->commands([
                 EncryptModel::class,
                 DecryptModel::class
@@ -52,7 +57,7 @@ class DBEncryptionServiceProvider extends ServiceProvider
         Validator::extend('unique_encrypted', function ($attribute, $value, $parameters, $validator) {
 
             // Initialize
-            $salt = substr(hash('sha256', env('APP_KEY')), 0, 16);
+            $salt = substr(hash('sha256', config('laravelDatabaseEncryption.encrypt_key')), 0, 16);
 
             $withFilter = count($parameters) > 3 ? true : false;
 
@@ -76,7 +81,7 @@ class DBEncryptionServiceProvider extends ServiceProvider
         Validator::extend('exists_encrypted', function ($attribute, $value, $parameters, $validator) {
 
             // Initialize
-            $salt = substr(hash('sha256', env('APP_KEY')), 0, 16);
+            $salt = substr(hash('sha256', config('laravelDatabaseEncryption.encrypt_key')), 0, 16);
 
             $withFilter = count($parameters) > 3 ? true : false;
             if(!$withFilter){

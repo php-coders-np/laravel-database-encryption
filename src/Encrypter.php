@@ -36,7 +36,7 @@ class Encrypter
      */
     protected static function getKey()
     {
-        $salt = substr(hash('sha256', env('APP_KEY')), 0, 16);
+        $salt = substr(hash('sha256', config('laravelDatabaseEncryption.encrypt_key')), 0, 16);
         return $salt;
     }
 }
