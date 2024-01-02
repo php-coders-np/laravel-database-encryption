@@ -12,6 +12,9 @@
   `whereEncrypted`, `orWhereEncrypted`
 - uses openssl for encrypting and decrypting fields
 
+## Available Methonds
+ `whereEncrypted`, `orWhereEncrypted`, `orderByEncrypted`, `selectEncrypted`
+
 ## Requirements
 
 - Laravel: >= 5
@@ -32,9 +35,8 @@ We highly recommend to alter your column types to `TEXT` or `LONGTEXT`
 Via Composer command line:
 
 ```bash
-$ composer require phpcodersnp/laravel-database-encryption
+composer require phpcodersnp/laravel-database-encryption
 ```
-php artisan vendor:publish --provider="PHPCodersNp\DBEncryption\Providers\DBEncryptionServiceProvider"
 
 ### Step 2: Add ServiceProvider to your app/config.php file (Laravel 5.4 or below)
 
@@ -51,7 +53,15 @@ Add the service provider to the providers array in the config/app.php config fil
 ```bash
 php artisan vendor:publish --provider="PHPCodersNp\DBEncryption\Providers\DBEncryptionServiceProvider"
 ```
-
+## For Lumen Projects
+```bash
+cp vendor/phpcodersnp/laravel-database-encryption/src/Config/config.php config/laravelDatabaseEncryption.php
+```
+## Register Package Lumen Projects
+Copy below code and paste it in bootstrap/app.php
+```php
+$app->register(PHPCodersNp\DBEncryption\Providers\DBEncryptionServiceProvider::class);
+```
 ## Usage
 
 Use the `EncryptedAttribute` trait in any Eloquent model that you wish to apply encryption

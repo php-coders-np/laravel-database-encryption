@@ -55,4 +55,17 @@ class EncryptionEloquentBuilder extends Builder
       return self::orderByRaw("CONVERT(AES_DECRYPT(FROM_bASE64(`{$column}`), '{$this->salt}') USING utf8mb4) {$direction}");
     }
   }
+
+  public function selectEncrypted($column)
+  {    
+    $parts = explode(' as ', $column);
+    $columnNameAlias = trim($parts[0]);
+    $columnAlias = trim($parts[1]);
+
+    $columnNameParts = explode('.', $columnNameAlias);
+    $tableName = $columnNameParts[0];
+    $columnName = $columnNameParts[1];
+
+    return self::selectRaw("CONVERT(AES_DECRYPT(FROM_BASE64(`{$tableName}`.`{$columnName}`), '{$this->salt}') USING utf8mb4) AS `{$columnAlias}`");
+  }
 }
