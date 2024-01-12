@@ -46,7 +46,7 @@ trait EncryptedAttribute {
 
     public function setAttribute($key, $value)
     {
-      if ($this->isEncryptable($key))
+      if ($this->isEncryptable($key) && (!is_null($value) && $value != ''))
       {
         try {
           $value = Encrypter::encrypt($value);
@@ -57,20 +57,20 @@ trait EncryptedAttribute {
 
     public function attributesToArray()
     {
-        $attributes = parent::attributesToArray();
-        if ($attributes) {
-          foreach ($attributes as $key => $value)
+      $attributes = parent::attributesToArray();
+      if ($attributes) {
+        foreach ($attributes as $key => $value)
+        {
+          if ($this->isEncryptable($key) && (!is_null($value)) && $value != '')
           {
-            if ($this->isEncryptable($key) && (!is_null($value)) && $value != '')
-            {
-              $attributes[$key] = $value;
-              try {
-                $attributes[$key] = Encrypter::decrypt($value);
-              } catch (\Exception $th) {}
-            }
+            $attributes[$key] = $value;
+            try {
+              $attributes[$key] = Encrypter::decrypt($value);
+            } catch (\Exception $th) {}
           }
         }
-        return $attributes;
+      }
+      return $attributes;
     }
     
     // Extend EncryptionEloquentBuilder
@@ -81,11 +81,11 @@ trait EncryptedAttribute {
 
     public function decryptAttribute($value)
     {
-       return $value ? Encrypter::decrypt($value) : '';
+      return (!is_null($value) && $value != '') ? Encrypter::decrypt($value) : $value;
     }
 
     public function encryptAttribute($value)
     {
-        return $value ? Encrypter::encrypt($value) : '';
+      return (!is_null($value) && $value != '') ? Encrypter::encrypt($value) : $value;
     }
 }

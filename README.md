@@ -9,11 +9,34 @@
 - Encrypt, Decrypt database fields easily
 - Minimal configuration
 - Include searching encrypted data using the following:
-  `whereEncrypted`, `orWhereEncrypted`
+  `whereEncrypted`, `orWhereEncrypted`, `orderByEncrypted`, `selectEncrypted`, `concatEncrypted`
 - uses openssl for encrypting and decrypting fields
 
-## Available Methonds
- `whereEncrypted`, `orWhereEncrypted`, `orderByEncrypted`, `selectEncrypted`
+## Available Methods
+ `whereEncrypted`, `orWhereEncrypted`, `orderByEncrypted`, `selectEncrypted`, `concatEncrypted`
+
+## Usage
+### `whereEncrypted`, `orWhereEncrypted`
+```php
+whereEncrypted('first_name','john')
+orWhereEncrypted('last_name','!=','Doe')
+```
+
+### `orderByEncrypted`
+```php
+orderByEncrypted('last_name','asc')
+orderByEncrypted('last_name','desc')
+```
+
+### `selectEncrypted`
+```php
+selectEncrypted("first_name as userFirstName")
+```
+
+### `concatEncrypted`
+```php
+concatEncrypted('first_name , " " ,last_name AS fullUserName')
+```
 
 ## Requirements
 
@@ -90,38 +113,16 @@ class User extends Eloquent {
 By including the `EncryptedAttribute` trait, the `setAttribute()`, `getAttribute()` and `getAttributeFromArray()`
 methods provided by Eloquent are overridden to include an additional step.
 
-### Searching Encrypted Fields Example:
-
-Searching encrypted field can be done by calling the `whereEncrypted` and `orWhereEncrypted` functions
-similar to laravel eloquent `where` and `orWhere`.
-
-```php
-namespace App\Http\Controllers;
-
-use App\User;
-class UsersController extends Controller {
-    public function index(Request $request)
-    {
-        $user = User::whereEncrypted('first_name','john')
-                    ->orWhereEncrypted('last_name','!=','Doe')
-                    ->orderByEncrypted('last_name','asc')
-                    ->first();
-
-        return $user;
-    }
-}
-```
-
 ### Encrypt your current data
 
 If you have current data in your database you can encrypt it with this command:
 ```bash
-php artisan encryptable:encryptModel 'App\User'
+php artisan encryptable:encryptModel 'App\Models\User'
 ```
 
 Additionally you can decrypt it using this command:
 ```bash
-php artisan encryptable:decryptModel 'App\User'
+php artisan encryptable:decryptModel 'App\Models\User'
 ```
 
 Note: You must implement first the `Encryptable` trait and set `$encryptable` attributes
@@ -142,23 +143,10 @@ YES! You will able to search on attributes which are encrypted by this package b
 If you need to search on data then use the `whereEncrypted` and `orWhereEncrypted` function:
 
 ```php
-User::whereEncrypted('email','test@gmail.com')->orWhereEncrypted('email','test2@gmail.com')->firstOrFail();
+User::whereEncrypted('email','test@gmail.com')->orWhereEncrypted('email','test2@gmail.com')->first();
 ```
 
 It will automatically added on the eloquent once the model uses `EncryptedAttribute`
-
-#### Can I encrypt all my `User` model data?
-
-Aside from IDs you can encrypt everything you wan't
-
-For example:
-Logging-in on encrypted email
-
-```php
-$user = User::whereEncrypted('email','test@gmail.com')->filter(function ($item) use ($request) {
-        return Hash::check($password, $item->password);
-    })->where('active',1)->first();
-```
 
 ## Credits
 

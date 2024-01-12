@@ -8,6 +8,7 @@
 namespace PHPCodersNp\DBEncryption\Builders;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Log;
 
 class EncryptionEloquentBuilder extends Builder
 {
@@ -58,14 +59,41 @@ class EncryptionEloquentBuilder extends Builder
 
   public function selectEncrypted($column)
   {    
-    $parts = explode(' as ', $column);
-    $columnNameAlias = trim($parts[0]);
-    $columnAlias = trim($parts[1]);
+    $parts = preg_split('/\s+as\s+|\s+AS\s+/', $column);
+    if (count($parts) == 2) {
+      $columnNameAlias = trim($parts[0]);
+      $columnAlias = trim($parts[1]);
+      
+      $columnNameParts = explode('.', $columnNameAlias);
+      $tableName = $columnNameParts[0];
+      $columnName = $columnNameParts[1];
+      
+      return self::selectRaw("CONVERT(AES_DECRYPT(FROM_BASE64(`{$tableName}`.`{$columnName}`), '{$this->salt}') USING utf8mb4) AS `{$columnAlias}`");
+    }
+  }
 
-    $columnNameParts = explode('.', $columnNameAlias);
-    $tableName = $columnNameParts[0];
-    $columnName = $columnNameParts[1];
+  public function concatEncrypted($columns, $defaultSeparator = ' ')
+  {
+      $parts = preg_split('/\s+as\s+|\s+AS\s+/', $columns);
+  
+      if (count($parts) == 2) {
+          $columnAlias = trim($parts[1]);
+          $singleParts = array_map('trim', explode(',', $parts[0]));
 
-    return self::selectRaw("CONVERT(AES_DECRYPT(FROM_BASE64(`{$tableName}`.`{$columnName}`), '{$this->salt}') USING utf8mb4) AS `{$columnAlias}`");
+          if (count($singleParts) == 3) {
+              [$columnNameAlias1, $separator, $columnNameAlias2] = $singleParts;
+  
+              $separator = trim($separator, '"\'');
+              $separator = $separator ?: $defaultSeparator;
+  
+              [$tableName1, $columnName1] = explode('.', $columnNameAlias1);
+              $encryptedColumn1 = "CONVERT(AES_DECRYPT(FROM_BASE64(`{$tableName1}`.`{$columnName1}`), '{$this->salt}') USING utf8mb4)";
+  
+              [$tableName2, $columnName2] = explode('.', $columnNameAlias2);
+              $encryptedColumn2 = "CONVERT(AES_DECRYPT(FROM_BASE64(`{$tableName2}`.`{$columnName2}`), '{$this->salt}') USING utf8mb4)";
+  
+              return self::selectRaw("CONCAT({$encryptedColumn1}, '{$separator}', {$encryptedColumn2}) AS `{$columnAlias}`");
+          }
+      }
   }
 }
