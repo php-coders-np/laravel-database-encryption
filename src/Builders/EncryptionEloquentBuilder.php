@@ -8,7 +8,6 @@
 namespace PHPCodersNp\DBEncryption\Builders;
 
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Log;
 
 class EncryptionEloquentBuilder extends Builder
 {
@@ -92,7 +91,7 @@ class EncryptionEloquentBuilder extends Builder
               [$tableName2, $columnName2] = explode('.', $columnNameAlias2);
               $encryptedColumn2 = "CONVERT(AES_DECRYPT(FROM_BASE64(`{$tableName2}`.`{$columnName2}`), '{$this->salt}') USING utf8mb4)";
   
-              return self::selectRaw("CONCAT({$encryptedColumn1}, '{$separator}', {$encryptedColumn2}) AS `{$columnAlias}`");
+              return self::selectRaw("CONCAT_WS('{$separator}', {$encryptedColumn1}, {$encryptedColumn2}) AS `{$columnAlias}`");
           }
       }
   }
