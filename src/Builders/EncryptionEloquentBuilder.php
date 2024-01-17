@@ -56,19 +56,25 @@ class EncryptionEloquentBuilder extends Builder
     }
   }
 
-  public function selectEncrypted($column)
-  {    
-    $parts = preg_split('/\s+as\s+|\s+AS\s+/', $column);
-    if (count($parts) == 2) {
-      $columnNameAlias = trim($parts[0]);
-      $columnAlias = trim($parts[1]);
-      
-      $columnNameParts = explode('.', $columnNameAlias);
-      $tableName = $columnNameParts[0];
-      $columnName = $columnNameParts[1];
-      
-      return self::selectRaw("CONVERT(AES_DECRYPT(FROM_BASE64(`{$tableName}`.`{$columnName}`), '{$this->salt}') USING utf8mb4) AS `{$columnAlias}`");
+  public function selectEncrypted(array $columns)
+  {
+    $selects = [];
+    foreach ($columns as $column) {
+        $parts = preg_split('/\s+as\s+|\s+AS\s+/', $column);
+
+        if (count($parts) == 2) {
+            $columnNameAlias = trim($parts[0]);
+            $columnAlias = trim($parts[1]);
+
+            $columnNameParts = explode('.', $columnNameAlias);
+            $tableName = $columnNameParts[0];
+            $columnName = $columnNameParts[1];
+
+            $selects[] = "CONVERT(AES_DECRYPT(FROM_BASE64(`{$tableName}`.`{$columnName}`), '{$this->salt}') USING utf8mb4) AS `{$columnAlias}`";
+        }
     }
+
+    return self::selectRaw(implode(', ', $selects));
   }
 
   public function concatEncrypted($columns, $defaultSeparator = ' ')

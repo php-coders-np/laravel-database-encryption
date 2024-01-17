@@ -30,7 +30,7 @@ orderByEncrypted('last_name','desc')
 
 ### `selectEncrypted`
 ```php
-selectEncrypted("first_name as userFirstName")
+selectEncrypted(["first_name as userFirstName"]) // array only
 ```
 
 ### `concatEncrypted`
@@ -143,7 +143,9 @@ YES! You will able to search on attributes which are encrypted by this package b
 If you need to search on data then use the `whereEncrypted` and `orWhereEncrypted` function:
 
 ```php
-User::whereEncrypted('email','test@gmail.com')->orWhereEncrypted('email','test2@gmail.com')->first();
+User::whereEncrypted('email','test@gmail.com')
+        ->orWhereEncrypted('email','test2@gmail.com')
+        ->first();
 ```
 
 It will automatically added on the eloquent once the model uses `EncryptedAttribute`
