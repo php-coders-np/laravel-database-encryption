@@ -28,9 +28,12 @@ orderByEncrypted('last_name','asc')
 orderByEncrypted('last_name','desc')
 ```
 
-### `selectEncrypted`
+### `selectEncrypted` 
 ```php
-selectEncrypted(["first_name as userFirstName"]) // array only
+selectEncrypted([
+    "first_name as userFirstName",
+    "last_name",
+    ]) // array only
 ```
 
 ### `concatEncrypted`
@@ -77,11 +80,16 @@ Add the service provider to the providers array in the config/app.php config fil
 php artisan vendor:publish --provider="PHPCodersNp\DBEncryption\Providers\DBEncryptionServiceProvider"
 ```
 ## For Lumen Projects
+### Configure Config File
 ```bash
 cp vendor/phpcodersnp/laravel-database-encryption/src/Config/config.php config/laravelDatabaseEncryption.php
 ```
-## Register Package Lumen Projects
+### Register Config and Package
 Copy below code and paste it in bootstrap/app.php
+```php
+$app->configure('laravelDatabaseEncryption');
+```
+
 ```php
 $app->register(PHPCodersNp\DBEncryption\Providers\DBEncryptionServiceProvider::class);
 ```
