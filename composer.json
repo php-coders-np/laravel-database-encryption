@@ -3,7 +3,7 @@
   "description": "Auto Encrypt and Decrypt Database through Eloquent",
   "type": "library",
   "license": "MIT",
-  "version": "1.0.7",
+  "version": "1.1.0",
   "authors": [
     {
       "name": "PHPCodersNp",
